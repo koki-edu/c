@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>บทที่ 2: กล่องเก็บข้อมูล (Variables & Data Types)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans Thai', sans-serif;
+            background-color: #F8FAFC;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+        @media (max-width: 640px) {
+            .chart-container {
+                height: 250px;
+            }
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
+    </style>
+</head>
+<body class="text-slate-800 antialiased pb-12">
+
+    <!-- Palette: Vibrant Blues & Energetic Accents (#2563EB, #06B6D4, #F59E0B, #E11D48, #10B981) -->
+    <!-- NO MERMAID JS NOR SVG WERE USED ANYWHERE IN THE OUTPUT. -->
+    <!-- Narrative Plan:
+    1. Introduction: Introduce the concept of variables as 'boxes' with labels.
+    2. Memory Footprint (Chart): Visualize the byte sizes of different data types to show technical differences.
+    3. Data Types Breakdown: Detailed cards showing sizes, examples, and syntax for int, float, char, double.
+    4. Naming Conventions: Clear Do's and Don'ts lists for creating valid variable names.
+    5. Conclusion: Key takeaways summarizing the learning objectives. -->
+    <!-- Visualization Choices:
+    1. Memory Size Chart -> Goal: Compare -> Chosen Visualization: Bar Chart -> Justification: Chart.js Bar chart effectively compares the numerical memory sizes (bytes) of the 4 data types. No SVG used, rendering via Canvas.
+    2. Icons & Layout -> Goal: Inform/Organize -> Chosen Visualization: Unicode characters & Tailwind CSS styled HTML -> Justification: Adheres strictly to the NO SVG and NO MERMAID constraints while maintaining visual appeal. -->
+
+    <nav class="sticky top-0 z-50 bg-blue-600 shadow-md">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center text-white">
+            <div class="font-bold text-xl tracking-wide">📦 C-Programming 101</div>
+            <div class="text-sm font-medium opacity-80 hidden sm:block">Variables & Data Types</div>
+        </div>
+    </nav>
+
+    <header class="max-w-6xl mx-auto px-4 py-12 text-center">
+        <h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-4 leading-tight">
+            บทที่ 2: กล่องเก็บข้อมูล <br/>
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">Variables & Data Types</span>
+        </h1>
+        <p class="text-lg md:text-xl text-slate-600 max-w-2xl mx-auto">
+            ในโลกของการเขียนโปรแกรม "ตัวแปร" (Variable) คือกล่องที่เราใช้เก็บข้อมูล โดยมี "ชนิดข้อมูล" (Data Type) เป็นตัวระบุว่ากล่องใบนั้นมีขนาดเท่าไหร่และใส่ของประเภทไหนได้บ้าง
+        </p>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 grid grid-cols-1 gap-10">
+
+        <section class="glass-card rounded-2xl shadow-xl p-6 md:p-10 border-t-8 border-cyan-500">
+            <div class="mb-6">
+                <h2 class="text-2xl md:text-3xl font-bold text-slate-800 flex items-center gap-2">
+                    <span>📊</span> เปรียบเทียบขนาดพื้นที่จัดเก็บในหน่วยความจำ (Bytes)
+                </h2>
+                <p class="text-slate-600 mt-2">
+                    ชนิดข้อมูลแต่ละประเภทใช้พื้นที่ในการจัดเก็บต่างกัน การเลือกใช้ให้เหมาะสมจะช่วยให้โปรแกรมทำงานได้มีประสิทธิภาพ กราฟด้านล่างแสดงให้เห็นถึงความแตกต่างของขนาดกล่องข้อมูลแต่ละชนิด
+                </p>
+            </div>
+            
+            <div class="w-full flex justify-center">
+                <div class="chart-container">
+                    <canvas id="memoryChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-4">
+            <h2 class="text-2xl md:text-3xl font-bold text-slate-800 mb-6 flex items-center gap-2 pl-2">
+                <span>🗂️</span> เจาะลึกชนิดข้อมูลพื้นฐาน
+            </h2>
+            <p class="text-slate-600 mb-8 pl-2">
+                นอกจากขนาดพื้นที่แล้ว ชนิดข้อมูลยังเป็นตัวกำหนดรูปแบบของข้อมูลที่อนุญาตให้เก็บในตัวแปรนั้นๆ มาดูกันว่าแต่ละประเภทมีลักษณะอย่างไร
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden transform transition hover:-translate-y-1">
+                    <div class="bg-blue-600 text-white p-4 text-center">
+                        <div class="text-4xl mb-2">🔢</div>
+                        <h3 class="text-xl font-bold">int</h3>
+                        <div class="text-blue-100 text-sm">(Integer)</div>
+                    </div>
+                    <div class="p-5">
+                        <ul class="space-y-3">
+                            <li class="flex items-start gap-2">
+                                <span class="font-semibold text-slate-700 w-24">ประเภท:</span> 
+                                <span class="text-slate-600">เลขจำนวนเต็ม</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="font-semibold text-slate-700 w-24">ตัวอย่าง:</span> 
+                                <span class="bg-slate-100 px-2 py-1 rounded text-sm text-pink-600 font-mono">10, -5, 2024</span>
+                            </li>
+                            <li class="mt-4 pt-4 border-t border-slate-100">
+                                <span class="block text-xs uppercase tracking-wider text-slate-400 mb-1 font-semibold">Syntax:</span>
+                                <code class="block bg-slate-800 text-green-400 p-2 rounded text-sm overflow-x-auto">int age = 25;</code>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden transform transition hover:-translate-y-1">
+                    <div class="bg-cyan-500 text-white p-4 text-center">
+                        <div class="text-4xl mb-2">📏</div>
+                        <h3 class="text-xl font-bold">float</h3>
+                        <div class="text-cyan-100 text-sm">(Floating Point)</div>
+                    </div>
+                    <div class="p-5">
+                        <ul class="space-y-3">
+                            <li class="flex items-start gap-2">
+                                <span class="font-semibold text-slate-700 w-24">ประเภท:</span> 
+                                <span class="text-slate-600">เลขทศนิยม</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="font-semibold text-slate-700 w-24">ตัวอย่าง:</span> 
+                                <span class="bg-slate-100 px-2 py-1 rounded text-sm text-pink-600 font-mono">3.14, 99.9</span>
+                            </li>
+                            <li class="mt-4 pt-4 border-t border-slate-100">
+                                <span class="block text-xs uppercase tracking-wider text-slate-400 mb-1 font-semibold">Syntax:</span>
+                                <code class="block bg-slate-800 text-green-400 p-2 rounded text-sm overflow-x-auto">float price = 199.50;</code>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden transform transition hover:-translate-y-1">
+                    <div class="bg-amber-500 text-white p-4 text-center">
+                        <div class="text-4xl mb-2">🔠</div>
+                        <h3 class="text-xl font-bold">char</h3>
+                        <div class="text-amber-100 text-sm">(Character)</div>
+                    </div>
+                    <div class="p-5">
+                        <ul class="space-y-3">
+                            <li class="flex items-start gap-2">
+                                <span class="font-semibold text-slate-700 w-24">ประเภท:</span> 
+                                <span class="text-slate-600">ตัวอักษร 1 ตัว</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="font-semibold text-slate-700 w-24">ตัวอย่าง:</span> 
+                                <span class="bg-slate-100 px-2 py-1 rounded text-sm text-pink-600 font-mono">'A', 'z', '#'</span>
+                            </li>
+                            <li class="mt-4 pt-4 border-t border-slate-100">
+                                <span class="block text-xs uppercase tracking-wider text-slate-400 mb-1 font-semibold">Syntax:</span>
+                                <code class="block bg-slate-800 text-green-400 p-2 rounded text-sm overflow-x-auto">char grade = 'A';</code>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden transform transition hover:-translate-y-1">
+                    <div class="bg-rose-500 text-white p-4 text-center">
+                        <div class="text-4xl mb-2">🔬</div>
+                        <h3 class="text-xl font-bold">double</h3>
+                        <div class="text-rose-100 text-sm">(High Precision)</div>
+                    </div>
+                    <div class="p-5">
+                        <ul class="space-y-3">
+                            <li class="flex items-start gap-2">
+                                <span class="font-semibold text-slate-700 w-24">ประเภท:</span> 
+                                <span class="text-slate-600">ทศนิยมละเอียดสูง</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="font-semibold text-slate-700 w-24">ตัวอย่าง:</span> 
+                                <span class="bg-slate-100 px-2 py-1 rounded text-sm text-pink-600 font-mono">0.000000123</span>
+                            </li>
+                            <li class="mt-4 pt-4 border-t border-slate-100">
+                                <span class="block text-xs uppercase tracking-wider text-slate-400 mb-1 font-semibold">Syntax:</span>
+                                <code class="block bg-slate-800 text-green-400 p-2 rounded text-sm overflow-x-auto">double pi = 3.14159;</code>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-4">
+            <div class="glass-card rounded-2xl shadow-xl p-6 md:p-8 border-t-8 border-green-500">
+                <h3 class="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-3">
+                    <span class="bg-green-100 text-green-600 p-2 rounded-full">✅</span> 
+                    สิ่งที่ทำได้ (Correct)
+                </h3>
+                <ul class="space-y-4">
+                    <li class="flex gap-3">
+                        <span class="text-green-500 font-bold">1.</span>
+                        <div>
+                            <span class="font-semibold text-slate-700">ขึ้นต้นด้วยตัวอักษร</span>
+                            <p class="text-sm text-slate-500 font-mono mt-1 bg-slate-100 p-1 inline-block rounded">score, Name, player1</p>
+                        </div>
+                    </li>
+                    <li class="flex gap-3">
+                        <span class="text-green-500 font-bold">2.</span>
+                        <div>
+                            <span class="font-semibold text-slate-700">ใช้ Underscore ได้</span>
+                            <p class="text-sm text-slate-500 font-mono mt-1 bg-slate-100 p-1 inline-block rounded">total_price, _status</p>
+                        </div>
+                    </li>
+                    <li class="flex gap-3">
+                        <span class="text-green-500 font-bold">3.</span>
+                        <div>
+                            <span class="font-semibold text-slate-700">Case Sensitive</span>
+                            <p class="text-sm text-slate-500 mt-1">ตัวพิมพ์เล็ก/ใหญ่มีผล <code class="bg-slate-100 px-1 rounded text-pink-600">age</code> ถือว่าเป็นคนละกล่องกับ <code class="bg-slate-100 px-1 rounded text-pink-600">Age</code></p>
+                        </div>
+                    </li>
+                    <li class="flex gap-3">
+                        <span class="text-green-500 font-bold">4.</span>
+                        <div>
+                            <span class="font-semibold text-slate-700">ความหมายชัดเจน</span>
+                            <p class="text-sm text-slate-500 mt-1">เช่น <code class="bg-slate-100 px-1 rounded text-pink-600">student_id</code> สื่อความหมายดีกว่าใช้แค่ <code class="bg-slate-100 px-1 rounded text-pink-600">s</code></p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="glass-card rounded-2xl shadow-xl p-6 md:p-8 border-t-8 border-red-500">
+                <h3 class="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-3">
+                    <span class="bg-red-100 text-red-600 p-2 rounded-full">❌</span> 
+                    สิ่งที่ห้ามทำ (Incorrect)
+                </h3>
+                <ul class="space-y-4">
+                    <li class="flex gap-3">
+                        <span class="text-red-500 font-bold">1.</span>
+                        <div>
+                            <span class="font-semibold text-slate-700">ห้ามขึ้นต้นด้วยตัวเลข</span>
+                            <p class="text-sm text-slate-500 font-mono mt-1 bg-red-50 text-red-600 p-1 inline-block rounded line-through">1player</p>
+                        </div>
+                    </li>
+                    <li class="flex gap-3">
+                        <span class="text-red-500 font-bold">2.</span>
+                        <div>
+                            <span class="font-semibold text-slate-700">ห้ามมีเว้นวรรค</span>
+                            <p class="text-sm text-slate-500 font-mono mt-1 bg-red-50 text-red-600 p-1 inline-block rounded line-through">item price</p>
+                        </div>
+                    </li>
+                    <li class="flex gap-3">
+                        <span class="text-red-500 font-bold">3.</span>
+                        <div>
+                            <span class="font-semibold text-slate-700">ห้ามใช้สัญลักษณ์พิเศษ</span>
+                            <p class="text-sm text-slate-500 mt-1">ห้ามใช้ <code class="bg-slate-100 px-1 rounded text-pink-600">@, #, $, %</code> ยกเว้น <code class="bg-slate-100 px-1 rounded text-pink-600">_</code> เท่านั้น</p>
+                        </div>
+                    </li>
+                    <li class="flex gap-3">
+                        <span class="text-red-500 font-bold">4.</span>
+                        <div>
+                            <span class="font-semibold text-slate-700">ห้ามใช้คำสงวน (Reserved Words)</span>
+                            <p class="text-sm text-slate-500 mt-1">เช่น <code class="bg-slate-100 px-1 rounded text-pink-600">int, float, return</code> เพราะเป็นคำสั่งระบบ</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="bg-slate-900 rounded-2xl shadow-2xl p-8 md:p-12 text-white text-center relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-full opacity-10" style="background-image: radial-gradient(circle at 20px 20px, rgba(255, 255, 255, 1) 2px, transparent 0); background-size: 40px 40px;"></div>
+            
+            <div class="relative z-10">
+                <div class="text-5xl mb-4">💡</div>
+                <h2 class="text-3xl font-extrabold mb-8">สรุปใจความสำคัญ (Key Takeaways)</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
+                    <div class="bg-slate-800/80 p-6 rounded-xl border border-slate-700">
+                        <div class="text-blue-400 font-bold text-xl mb-2">1. เลือกให้ถูกขนาด</div>
+                        <p class="text-slate-300">เลือกกล่องให้เหมาะกับสิ่งที่จะเก็บ เช่น อายุใช้ <code class="text-pink-400">int</code> เกรดเฉลี่ยใช้ <code class="text-pink-400">float</code></p>
+                    </div>
+                    <div class="bg-slate-800/80 p-6 rounded-xl border border-slate-700">
+                        <div class="text-amber-400 font-bold text-xl mb-2">2. สื่อความหมาย</div>
+                        <p class="text-slate-300">ตั้งชื่อตัวแปรเปรียบเหมือนป้ายกำกับกล่อง ยิ่งชัดเจน ยิ่งช่วยให้ตัวเราและเพื่อนร่วมทีมทำงานได้ง่ายขึ้น</p>
+                    </div>
+                    <div class="bg-slate-800/80 p-6 rounded-xl border border-slate-700">
+                        <div class="text-emerald-400 font-bold text-xl mb-2">3. ประกาศก่อนใช้</div>
+                        <p class="text-slate-300">ในภาษา C (Static Typing) เราต้องบอกระบบก่อนเสมอว่ากล่องใบนี้ชื่ออะไร และมีชนิดข้อมูลแบบไหน</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="mt-12 py-6 text-center text-slate-500 text-sm">
+        <p>Infographic designed for C Programming Fundamentals</p>
+    </footer>
+
+    <script>
+        function wrapLabel(label) {
+            if (label.length <= 16) return label;
+            const words = label.split(' ');
+            const lines = [];
+            let currentLine = '';
+            for (const word of words) {
+                if ((currentLine + word).length > 16) {
+                    if (currentLine) lines.push(currentLine.trim());
+                    currentLine = word + ' ';
+                } else {
+                    currentLine += word + ' ';
+                }
+            }
+            if (currentLine) lines.push(currentLine.trim());
+            return lines;
+        }
+
+        const rawLabels = ['char (อักขระ 1 ตัว)', 'int (เลขจำนวนเต็ม)', 'float (เลขทศนิยม)', 'double (ทศนิยมละเอียดสูง)'];
+        const processedLabels = rawLabels.map(wrapLabel);
+
+        const ctx = document.getElementById('memoryChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: processedLabels,
+                datasets: [{
+                    label: 'ขนาดหน่วยความจำ (Bytes)',
+                    data: [1, 4, 4, 8],
+                    backgroundColor: [
+                        'rgba(245, 158, 11, 0.8)',
+                        'rgba(37, 99, 235, 0.8)',
+                        'rgba(6, 182, 212, 0.8)',
+                        'rgba(225, 29, 72, 0.8)'
+                    ],
+                    borderColor: [
+                        'rgba(245, 158, 11, 1)',
+                        'rgba(37, 99, 235, 1)',
+                        'rgba(6, 182, 212, 1)',
+                        'rgba(225, 29, 72, 1)'
+                    ],
+                    borderWidth: 2,
+                    borderRadius: 8,
+                    borderSkipped: false,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            title: function(tooltipItems) {
+                                const item = tooltipItems[0];
+                                let label = item.chart.data.labels[item.dataIndex];
+                                if (Array.isArray(label)) {
+                                  return label.join(' ');
+                                } else {
+                                  return label;
+                                }
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'ขนาด (Bytes)',
+                            font: {
+                                size: 14,
+                                weight: 'bold'
+                            }
+                        },
+                        ticks: {
+                            stepSize: 2
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            font: {
+                                size: 13
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
